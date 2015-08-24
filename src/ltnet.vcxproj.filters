@@ -39,6 +39,9 @@
     <ClInclude Include="torrent_handle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="torrent_status.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="session.cpp">
@@ -63,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="torrent_handle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="torrent_status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

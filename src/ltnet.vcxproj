@@ -139,6 +139,7 @@
     <ClInclude Include="session_alert_dispatcher.h" />
     <ClInclude Include="torrent_handle.h" />
     <ClInclude Include="torrent_info.h" />
+    <ClInclude Include="torrent_status.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="add_torrent_params.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="session_alert_dispatcher.cpp" />
     <ClCompile Include="torrent_handle.cpp" />
     <ClCompile Include="torrent_info.cpp" />
+    <ClCompile Include="torrent_status.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

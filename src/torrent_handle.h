@@ -2,11 +2,13 @@
 
 namespace libtorrent
 {
-    class torrent_handle;
+    struct torrent_handle;
 }
 
 namespace lt
 {
+    ref class torrent_status;
+
     public ref class torrent_handle
     {
     internal:
@@ -14,6 +16,8 @@ namespace lt
 
     public:
         ~torrent_handle();
+
+        torrent_status^ status();
 
     private:
         libtorrent::torrent_handle* handle_;
