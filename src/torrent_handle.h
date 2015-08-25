@@ -18,7 +18,7 @@ namespace lt
 
     public:
         ~torrent_handle();
-        // TODO add piece
+        void add_piece(int piece, cli::array<System::Byte>^ data, int flags);
         void read_piece(int index);
         bool have_piece(int index);
         // TODO get peer info
@@ -28,19 +28,19 @@ namespace lt
         void clear_piece_deadlines();
         void set_piece_deadline(int index, int deadline); // TODO flags
         void set_priority(int priority);
-        // TODO file progress
+        cli::array<long long>^ file_progress(int flags);
         void clear_error();
         // TODO trackers
         // TODO replace trackers
         // TODO add tracker
-        // TODO add url seed
-        // TODO remove url seed
-        // TODO url seeds
-        // TODO add http seed
-        // TODO remove http seed
-        // TODO http seeds
+        void add_url_seed(System::String^ url);
+        void remove_url_seed(System::String^ url);
+        cli::array<System::String^>^ url_seeds();
+        void add_http_seed(System::String^ url);
+        void remove_http_seed(System::String^ url);
+        cli::array<System::String^>^ http_seeds();
         // TODO add extensino
-        // TODO set metadata
+        void set_metadata(cli::array<System::Byte>^ metadata);
         bool is_valid();
         void pause();
         void resume();
@@ -59,20 +59,20 @@ namespace lt
         void queue_position_up();
         void resolve_countries(bool b);
         bool resolve_countries();
-        // TODO set ssl certificate
+        void set_ssl_certificate(System::String^ certificate, System::String^ private_key, System::String^ dh_params, System::String^ passphrase);
         // TODO set ssl cert buffer
         // TODO storage
         torrent_info^ torrent_file();
         // TODO use interface
-        // TODO piece availability
+        cli::array<int>^ piece_availability();
         int piece_priority(int index);
         void piece_priority(int index, int priority);
-        // TODO piece priorities
+        cli::array<int>^ piece_priorities();
         int file_priority(int index);
-        // TOOD prioritize files
+        void prioritize_files(cli::array<int>^ files);
         void file_priority(int index, int priority);
-        // TODO file priorities
-        // TODO force reannounce
+        cli::array<int>^ file_priorities();
+        void force_reannounce(int seconds, int tracker_index);
         void force_dht_announce();
         void scrape_tracker();
         int upload_limit();

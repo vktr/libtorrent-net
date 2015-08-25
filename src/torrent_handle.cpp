@@ -23,6 +23,13 @@ libtorrent::torrent_handle* torrent_handle::ptr()
     return handle_;
 }
 
+void torrent_handle::add_piece(int piece, cli::array<System::Byte>^ data, int flags)
+{
+    pin_ptr<unsigned char> ptr = &data[0];
+    const char *pbegin = (const char*)(const unsigned char*)ptr;
+    handle_->add_piece(piece, pbegin, flags);
+}
+
 void torrent_handle::read_piece(int index)
 {
     handle_->read_piece(index);
@@ -58,9 +65,78 @@ void torrent_handle::set_priority(int priority)
     handle_->set_priority(priority);
 }
 
+cli::array<long long>^ torrent_handle::file_progress(int flags)
+{
+    std::vector<libtorrent::size_type> progress;
+    handle_->file_progress(progress, flags);
+
+    cli::array<long long>^ result = gcnew cli::array<long long>(progress.size());
+    for (size_t i = 0; i < progress.size(); i++)
+    {
+        result[i] = progress[i];
+    }
+
+    return result;
+}
+
 void torrent_handle::clear_error()
 {
     handle_->clear_error();
+}
+
+void torrent_handle::add_url_seed(System::String^ url)
+{
+    handle_->add_url_seed(interop::to_std_string(url));
+}
+
+void torrent_handle::remove_url_seed(System::String^ url)
+{
+    handle_->remove_url_seed(interop::to_std_string(url));
+}
+
+cli::array<System::String^>^ torrent_handle::url_seeds()
+{
+    std::set<std::string> url_seeds = handle_->url_seeds();
+    cli::array<System::String^>^ result = gcnew cli::array<System::String^>(url_seeds.size());
+
+    for (size_t i = 0; i < url_seeds.size(); i++)
+    {
+        result[i] = interop::from_std_string(
+            *std::next(url_seeds.begin(), i));
+    }
+
+    return result;
+}
+
+void torrent_handle::add_http_seed(System::String^ url)
+{
+    handle_->add_http_seed(interop::to_std_string(url));
+}
+
+void torrent_handle::remove_http_seed(System::String^ url)
+{
+    handle_->remove_http_seed(interop::to_std_string(url));
+}
+
+cli::array<System::String^>^ torrent_handle::http_seeds()
+{
+    std::set<std::string> http_seeds = handle_->http_seeds();
+    cli::array<System::String^>^ result = gcnew cli::array<System::String^>(http_seeds.size());
+
+    for (size_t i = 0; i < http_seeds.size(); i++)
+    {
+        result[i] = interop::from_std_string(
+            *std::next(http_seeds.begin(), i));
+    }
+
+    return result;
+}
+
+void torrent_handle::set_metadata(cli::array<System::Byte>^ metadata)
+{
+    pin_ptr<unsigned char> ptr = &metadata[0];
+    const char *pbegin = (const char*)(const unsigned char*)ptr;
+    handle_->set_metadata(pbegin, metadata->Length);
 }
 
 bool torrent_handle::is_valid()
@@ -153,6 +229,15 @@ bool torrent_handle::resolve_countries()
     return handle_->resolve_countries();
 }
 
+void torrent_handle::set_ssl_certificate(System::String^ certificate, System::String^ private_key, System::String^ dh_params, System::String^ passphrase)
+{
+    handle_->set_ssl_certificate(
+        interop::to_std_string(certificate),
+        interop::to_std_string(private_key),
+        interop::to_std_string(dh_params),
+        interop::to_std_string(passphrase));
+}
+
 torrent_info^ torrent_handle::torrent_file()
 {
     if (!handle_->torrent_file())
@@ -161,6 +246,20 @@ torrent_info^ torrent_handle::torrent_file()
     }
 
     return gcnew torrent_info(*handle_->torrent_file().get());
+}
+
+cli::array<int>^ torrent_handle::piece_availability()
+{
+    std::vector<int> avail;
+    handle_->piece_availability(avail);
+
+    cli::array<int>^ result = gcnew cli::array<int>(avail.size());
+    for (size_t i = 0; i < avail.size(); i++)
+    {
+        result[i] = avail[i];
+    }
+
+    return result;
 }
 
 int torrent_handle::piece_priority(int index)
@@ -173,14 +272,58 @@ void torrent_handle::piece_priority(int index, int priority)
     handle_->piece_priority(index, priority);
 }
 
+cli::array<int>^ torrent_handle::piece_priorities()
+{
+    std::vector<int> prio = handle_->piece_priorities();
+    cli::array<int>^ result = gcnew cli::array<int>(prio.size());
+
+    for (size_t i = 0; i < prio.size(); i++)
+    {
+        result[i] = prio[i];
+    }
+
+    return result;
+}
+
 int torrent_handle::file_priority(int index)
 {
     return handle_->file_priority(index);
 }
 
+void torrent_handle::prioritize_files(cli::array<int>^ files)
+{
+    std::vector<int> f;
+    f.reserve(files->Length);
+
+    for (int i = 0; i < files->Length; i++)
+    {
+        f[i] = files[i];
+    }
+
+    handle_->prioritize_files(f);
+}
+
 void torrent_handle::file_priority(int index, int priority)
 {
     handle_->file_priority(index, priority);
+}
+
+cli::array<int>^ torrent_handle::file_priorities()
+{
+    std::vector<int> prios = handle_->file_priorities();
+    cli::array<int>^ result = gcnew cli::array<int>(prios.size());
+
+    for (size_t i = 0; i < prios.size(); i++)
+    {
+        result[i] = prios[i];
+    }
+
+    return result;
+}
+
+void torrent_handle::force_reannounce(int seconds, int tracker_index)
+{
+    handle_->force_reannounce(seconds, tracker_index);
 }
 
 void torrent_handle::force_dht_announce()
