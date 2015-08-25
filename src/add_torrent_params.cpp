@@ -51,7 +51,7 @@ torrent_info^ add_torrent_params::ti::get()
 
 void add_torrent_params::ti::set(torrent_info^ value)
 {
-    params_->ti = value->ptr();
+    params_->ti = new libtorrent::torrent_info(*value->ptr());
 }
 
 libtorrent::add_torrent_params* add_torrent_params::ptr()

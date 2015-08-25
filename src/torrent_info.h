@@ -20,7 +20,7 @@ namespace lt
         System::String^ creator();
 
     internal:
-        torrent_info(libtorrent::torrent_info& info);
+        torrent_info(const libtorrent::torrent_info& info);
 
         libtorrent::torrent_info* ptr();
 

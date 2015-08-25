@@ -27,7 +27,7 @@ alert::~alert()
 
 alert^ alert::create(std::auto_ptr<libtorrent::alert> al)
 {
-    libtorrent::alert* a = al.release();
+    libtorrent::alert* a = al->clone().release();
 
     switch (a->type())
     {

@@ -20,7 +20,7 @@ torrent_info::torrent_info(System::String^ fileName)
     info_ = new libtorrent::torrent_info(file);
 }
 
-torrent_info::torrent_info(libtorrent::torrent_info& info)
+torrent_info::torrent_info(const libtorrent::torrent_info& info)
 {
     info_ = new libtorrent::torrent_info(info);
 }

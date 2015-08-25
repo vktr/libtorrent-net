@@ -7,12 +7,14 @@ namespace libtorrent
 
 namespace lt
 {
+    ref class torrent_info;
     ref class torrent_status;
 
     public ref class torrent_handle
     {
     internal:
         torrent_handle(libtorrent::torrent_handle& handle);
+        libtorrent::torrent_handle* ptr();
 
     public:
         ~torrent_handle();
@@ -60,7 +62,7 @@ namespace lt
         // TODO set ssl certificate
         // TODO set ssl cert buffer
         // TODO storage
-        // TODO torrent file
+        torrent_info^ torrent_file();
         // TODO use interface
         // TODO piece availability
         int piece_priority(int index);

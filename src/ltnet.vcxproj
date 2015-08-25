@@ -134,23 +134,29 @@
     <ClInclude Include="add_torrent_params.h" />
     <ClInclude Include="alert.h" />
     <ClInclude Include="alert_types.h" />
+    <ClInclude Include="entry.h" />
     <ClInclude Include="interop.h" />
+    <ClInclude Include="lazy_entry.h" />
     <ClInclude Include="session.h" />
     <ClInclude Include="session_alert_dispatcher.h" />
     <ClInclude Include="torrent_handle.h" />
     <ClInclude Include="torrent_info.h" />
     <ClInclude Include="torrent_status.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="add_torrent_params.cpp" />
     <ClCompile Include="alert.cpp" />
     <ClCompile Include="alert_types.cpp" />
+    <ClCompile Include="entry.cpp" />
     <ClCompile Include="interop.cpp" />
+    <ClCompile Include="lazy_entry.cpp" />
     <ClCompile Include="session.cpp" />
     <ClCompile Include="session_alert_dispatcher.cpp" />
     <ClCompile Include="torrent_handle.cpp" />
     <ClCompile Include="torrent_info.cpp" />
     <ClCompile Include="torrent_status.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
