@@ -1,8 +1,12 @@
 #include "torrent_handle.h"
 
+#include <libtorrent/peer_info.hpp>
 #include <libtorrent/torrent_handle.hpp>
 
+#include "announce_entry.h"
 #include "interop.h"
+#include "peer_info.h"
+#include "sha1_hash.h"
 #include "torrent_info.h"
 #include "torrent_status.h"
 
@@ -38,6 +42,21 @@ void torrent_handle::read_piece(int index)
 bool torrent_handle::have_piece(int index)
 {
     return handle_->have_piece(index);
+}
+
+cli::array<peer_info^>^ torrent_handle::get_peer_info()
+{
+    std::vector<libtorrent::peer_info> p;
+    handle_->get_peer_info(p);
+
+    cli::array<peer_info^>^ result = gcnew cli::array<peer_info^>(p.size());
+
+    for (size_t i = 0; i < p.size(); i++)
+    {
+        result[i] = gcnew peer_info(p[i]);
+    }
+
+    return result;
 }
 
 torrent_status^ torrent_handle::status()
@@ -82,6 +101,24 @@ cli::array<long long>^ torrent_handle::file_progress(int flags)
 void torrent_handle::clear_error()
 {
     handle_->clear_error();
+}
+
+cli::array<announce_entry^>^ torrent_handle::trackers()
+{
+    std::vector<libtorrent::announce_entry> trackers = handle_->trackers();
+    cli::array<announce_entry^>^ result = gcnew cli::array<announce_entry^>(trackers.size());
+
+    for (size_t i = 0; i < trackers.size(); i++)
+    {
+        result[i] = gcnew announce_entry(trackers[i]);
+    }
+
+    return result;
+}
+
+void torrent_handle::add_tracker(announce_entry^ entry)
+{
+    handle_->add_tracker(*entry->ptr());
 }
 
 void torrent_handle::add_url_seed(System::String^ url)
@@ -405,4 +442,9 @@ void torrent_handle::rename_file(int index, System::String^ name)
 void torrent_handle::super_seeding(bool on)
 {
     handle_->super_seeding(on);
+}
+
+sha1_hash^ torrent_handle::info_hash()
+{
+    return gcnew sha1_hash(handle_->info_hash());
 }

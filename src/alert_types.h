@@ -85,7 +85,10 @@ namespace libtorrent
 namespace lt
 {
     ref class entry;
+    ref class error_code;
+    ref class sha1_hash;
     ref class torrent_handle;
+    ref class torrent_status;
 
     /// <summary>
     /// This is a base class for alerts that are associated with a specific
@@ -116,7 +119,9 @@ namespace lt
         peer_alert(libtorrent::peer_alert* alert);
 
         // TODO ip
-        // TODO peer_id
+        property sha1_hash^ pid { sha1_hash^ get(); }
+    private:
+        libtorrent::peer_alert* alert_;
     };
 
     /// <summary>
@@ -281,7 +286,7 @@ namespace lt
 
         property int times_in_row { int get(); }
         property int status_code { int get(); }
-        // property  TODO eror code
+        property error_code^ error { error_code^ get(); }
         property System::String^ msg { System::String^ get(); }
 
     private:
@@ -440,8 +445,7 @@ namespace lt
     {
     public:
         peer_error_alert(libtorrent::peer_error_alert* alert);
-
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::peer_error_alert* alert_;
     };
@@ -468,7 +472,7 @@ namespace lt
     {
     public:
         peer_disconnected_alert(libtorrent::peer_disconnected_alert* alert);
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::peer_disconnected_alert* alert_;
     };
@@ -609,7 +613,7 @@ namespace lt
     {
     public:
         storage_moved_failed_alert(libtorrent::storage_moved_failed_alert* alert);
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::storage_moved_failed_alert* alert_;
     };
@@ -626,7 +630,7 @@ namespace lt
     {
     public:
         torrent_deleted_alert(libtorrent::torrent_deleted_alert* alert);
-        // TODO info hash
+        property sha1_hash^ info_hash { sha1_hash^ get(); }
     private:
         libtorrent::torrent_deleted_alert* alert_;
     };
@@ -639,8 +643,8 @@ namespace lt
     {
     public:
         torrent_delete_failed_alert(libtorrent::torrent_delete_failed_alert* alert);
-        // TODO error code
-        // TODO info hash
+        property error_code^ error { error_code^ get(); }
+        property sha1_hash^ info_hash { sha1_hash^ get(); }
     private:
         libtorrent::torrent_delete_failed_alert* alert_;
     };
@@ -668,7 +672,7 @@ namespace lt
     {
     public:
         save_resume_data_failed_alert(libtorrent::save_resume_data_failed_alert* alert);
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::save_resume_data_failed_alert* alert_;
     };
@@ -731,7 +735,7 @@ namespace lt
         file_error_alert(libtorrent::file_error_alert* alert);
 
         property System::String^ file { System::String^ get(); }
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::file_error_alert* alert_;
     };
@@ -747,7 +751,7 @@ namespace lt
     {
     public:
         metadata_failed_alert(libtorrent::metadata_failed_alert* alert);
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::metadata_failed_alert* alert_;
     };
@@ -777,7 +781,7 @@ namespace lt
     public:
         udp_error_alert(libtorrent::udp_error_alert* alert);
         // TODO endpoint
-        // TODO error
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::udp_error_alert* alert_;
     };
@@ -812,7 +816,7 @@ namespace lt
         listen_failed_alert(libtorrent::listen_failed_alert* alert);
 
         // TODO endpoint
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
         property int operation { int get(); }
         // TODO sock type
     private:
@@ -850,7 +854,7 @@ namespace lt
 
         property int mapping { int get(); }
         property int map_type { int get(); }
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::portmap_error_alert* alert_;
     };
@@ -899,7 +903,7 @@ namespace lt
     {
     public:
         fastresume_rejected_alert(libtorrent::fastresume_rejected_alert* alert);
-        // TODO error code
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::fastresume_rejected_alert* alert_;
     };
@@ -930,7 +934,7 @@ namespace lt
 
         // TODO ip
         property int port { int get(); }
-        // TODO info hash
+        property sha1_hash^ info_hash { sha1_hash^ get(); }
     private:
         libtorrent::dht_announce_alert* alert_;
     };
@@ -943,7 +947,7 @@ namespace lt
     {
     public:
         dht_get_peers_alert(libtorrent::dht_get_peers_alert* alert);
-        // TODO info hash
+        property sha1_hash^ info_hash { sha1_hash^ get(); }
     private:
         libtorrent::dht_get_peers_alert* alert_;
     };
@@ -1037,7 +1041,7 @@ namespace lt
     {
     public:
         torrent_error_alert(libtorrent::torrent_error_alert* alert);
-        // TODO error
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::torrent_error_alert* alert_;
     };
@@ -1053,7 +1057,7 @@ namespace lt
     {
     public:
         torrent_need_cert_alert(libtorrent::torrent_need_cert_alert* alert);
-        // TODO error
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::torrent_need_cert_alert* alert_;
     };
@@ -1089,7 +1093,7 @@ namespace lt
         add_torrent_alert(libtorrent::add_torrent_alert* alert);
 
         // TODO params
-        // TODO error
+        property error_code^ error { error_code^ get(); }
     private:
         libtorrent::add_torrent_alert* alert_;
     };
@@ -1105,8 +1109,7 @@ namespace lt
     {
     public:
         state_update_alert(libtorrent::state_update_alert* alert);
-
-        // TODO status
+        property cli::array<torrent_status^>^ status { cli::array<torrent_status^>^ get(); }
     private:
         libtorrent::state_update_alert* alert_;
     };
@@ -1123,9 +1126,8 @@ namespace lt
     {
     public:
         torrent_update_alert(libtorrent::torrent_update_alert* alert);
-
-        // TODO old_ih
-        // TODO new_ih
+        property sha1_hash^ old_ih { sha1_hash^ get(); }
+        property sha1_hash^ new_ih { sha1_hash^ get(); }
     private:
         libtorrent::torrent_update_alert* alert_;
     };
@@ -1138,7 +1140,7 @@ namespace lt
     {
     public:
         dht_error_alert(libtorrent::dht_error_alert* alert);
-        // TODO error
+        property error_code^ error { error_code^ get(); }
         // TODO operation
     private:
         libtorrent::dht_error_alert* alert_;

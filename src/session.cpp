@@ -4,10 +4,14 @@
 
 #include "alert.h"
 #include "add_torrent_params.h"
+#include "dht_settings.h"
 #include "entry.h"
 #include "interop.h"
 #include "lazy_entry.h"
 #include "session_alert_dispatcher.h"
+#include "session_settings.h"
+#include "session_status.h"
+#include "sha1_hash.h"
 #include "torrent_handle.h"
 
 using namespace lt;
@@ -40,6 +44,24 @@ entry^ session::save_state(unsigned int flags)
 void session::post_torrent_updates()
 {
     session_->post_torrent_updates();
+}
+
+torrent_handle^ session::find_torrent(sha1_hash^ hash)
+{
+    return gcnew torrent_handle(session_->find_torrent(hash->ptr()));
+}
+
+cli::array<torrent_handle^>^ session::get_torrents()
+{
+    std::vector<libtorrent::torrent_handle> torrents = session_->get_torrents();
+    cli::array<torrent_handle^>^ result = gcnew cli::array<torrent_handle^>(torrents.size());
+
+    for (size_t i = 0; i < torrents.size(); i++)
+    {
+        result[i] = gcnew torrent_handle(torrents[i]);
+    }
+
+    return result;
 }
 
 void session::async_add_torrent(add_torrent_params^ params)
@@ -75,9 +97,19 @@ bool session::is_paused()
     return session_->is_paused();
 }
 
+session_status^ session::status()
+{
+    return gcnew session_status(session_->status());
+}
+
 bool session::is_dht_running()
 {
     return session_->is_dht_running();
+}
+
+dht_settings^ session::get_dht_settings()
+{
+    return gcnew dht_settings(session_->get_dht_settings());
 }
 
 void session::start_dht()
@@ -88,6 +120,21 @@ void session::start_dht()
 void session::stop_dht()
 {
     session_->stop_dht();
+}
+
+void session::set_dht_settings(dht_settings^ settings)
+{
+    session_->set_dht_settings(settings->ptr());
+}
+
+void session::add_dht_router(System::String^ host, int port)
+{
+    session_->add_dht_router(std::make_pair(interop::to_std_string(host), port));
+}
+
+void session::add_dht_node(System::String^ host, int port)
+{
+    session_->add_dht_node(std::make_pair(interop::to_std_string(host), port));
 }
 
 void session::load_country_db(System::String^ file)
@@ -134,6 +181,16 @@ int session::ssl_listen_port()
 void session::remove_torrent(torrent_handle^ handle, int options)
 {
     session_->remove_torrent(*handle->ptr(), options);
+}
+
+session_settings^ session::settings()
+{
+    return gcnew session_settings(session_->settings());
+}
+
+void session::set_settings(session_settings^ settings)
+{
+    session_->set_settings(settings->ptr());
 }
 
 void session::set_alert_mask(unsigned int mask)

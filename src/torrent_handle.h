@@ -7,6 +7,9 @@ namespace libtorrent
 
 namespace lt
 {
+    ref class announce_entry;
+    ref class peer_info;
+    ref class sha1_hash;
     ref class torrent_info;
     ref class torrent_status;
 
@@ -21,7 +24,7 @@ namespace lt
         void add_piece(int piece, cli::array<System::Byte>^ data, int flags);
         void read_piece(int index);
         bool have_piece(int index);
-        // TODO get peer info
+        cli::array<peer_info^>^ get_peer_info();
         torrent_status^ status();
         // TODO get download queue
         void reset_piece_deadline(int index);
@@ -30,9 +33,9 @@ namespace lt
         void set_priority(int priority);
         cli::array<long long>^ file_progress(int flags);
         void clear_error();
-        // TODO trackers
+        cli::array<announce_entry^>^ trackers();
         // TODO replace trackers
-        // TODO add tracker
+        void add_tracker(announce_entry^ entry);
         void add_url_seed(System::String^ url);
         void remove_url_seed(System::String^ url);
         cli::array<System::String^>^ url_seeds();
@@ -89,7 +92,7 @@ namespace lt
         void move_storage(System::String^ save_path, int flags); // TODO flags
         void rename_file(int index, System::String^ name);
         void super_seeding(bool on);
-        // TODO info hash
+        sha1_hash^ info_hash();
         // TODO compare operators
 
     private:
